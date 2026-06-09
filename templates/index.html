@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Phân Loại Rác</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #dbe5f2;
+      color: #111827;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 120px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      box-shadow: 2px 0 10px rgba(15, 23, 42, 0.08);
+    }
+
+    .brand {
+      height: 41px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5b4deb 100%);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .sidebar-nav {
+      display: grid;
+      gap: 9px;
+      padding: 14px 8px;
+    }
+
+    .nav-link {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      border-radius: 5px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .nav-link.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5146e5 100%);
+      box-shadow: 0 7px 14px rgba(79, 70, 229, 0.25);
+    }
+
+    .nav-link.logout {
+      color: #ef4444;
+    }
+
+    .nav-link:hover {
+      background: #f4f0ff;
+      color: #6d28d9;
+    }
+
+    .nav-link.active:hover {
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5146e5 100%);
+    }
+
+    .sidebar-user {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      border-top: 1px solid #eef0f4;
+      color: #6b7280;
+      background: #fbfcff;
+      font-size: 9px;
+      line-height: 1.15;
+    }
+
+    .avatar {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #ffffff;
+      background: #7c3aed;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 120px;
+      right: 0;
+      z-index: 20;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 1px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .topbar-title {
+      color: #6d28d9;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #111827;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .topbar-user a {
+      display: inline-flex;
+      color: #ef4444;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 505px;
+      margin-left: 120px;
+      padding-top: 36px;
+      background:
+        radial-gradient(circle at 8% 4%, rgba(255, 255, 255, 0.55), transparent 30%),
+        linear-gradient(135deg, #eef5ff 0%, #dfe8f5 46%, #cbd8e8 100%);
+    }
+
+    .dashboard-wrap {
+      width: 520px;
+      margin: 0 auto;
+      padding: 18px 0 66px;
+    }
+
+    .hero {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      border-radius: 7px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 100%);
+      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+    }
+
+    .hero-icon {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .hero p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .card {
+      min-height: 192px;
+      padding: 13px;
+      border-radius: 6px;
+      background: #ffffff;
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.16);
+    }
+
+    .guide-card {
+      min-height: 96px;
+      padding: 12px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 11px;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .card-icon {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      color: #ffffff;
+    }
+
+    .blue {
+      background: #3b82f6;
+    }
+
+    .green {
+      background: #22c55e;
+    }
+
+    .gray {
+      background: #9ca3af;
+    }
+
+    .drop-zone {
+      height: 86px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed #d1d5db;
+      border-radius: 5px;
+      background: #f9fafb;
+      color: #6b7280;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .drop-zone strong {
+      display: block;
+      margin-top: 4px;
+      color: #4b5563;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .drop-zone span span {
+      display: block;
+      margin-top: 3px;
+      color: #6b7280;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 0.84fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      height: 28px;
+      border: 0;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(15, 23, 42, 0.13);
+    }
+
+    .btn-primary {
+      background: #2563eb;
+    }
+
+    .btn-gray {
+      background: #6b7280;
+    }
+
+    .btn-green {
+      width: 100%;
+      background: #16a34a;
+    }
+
+    .btn-red {
+      width: 100%;
+      background: #ef4444;
+    }
+
+    .preview-img,
+    .camera-img {
+      width: 100%;
+      margin-top: 11px;
+      border: 1px solid #e5e7eb;
+      border-radius: 5px;
+      background: #f8fafc;
+      object-fit: contain;
+    }
+
+    .preview-img {
+      max-height: 218px;
+    }
+
+    .camera-img {
+      max-height: 230px;
+    }
+
+    .result-pill {
+      width: fit-content;
+      max-width: 100%;
+      margin: 8px auto 0;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #818cf8, #6d5dfc);
+      box-shadow: 0 8px 15px rgba(79, 70, 229, 0.24);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .guide-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 7px;
+    }
+
+    .guide-head h2 {
+      margin: 0;
+      color: #111827;
+      font-size: 12px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .guide-head p {
+      margin: 2px 0 0;
+      color: #6b7280;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .guide-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #4b5563;
+      font-size: 9px;
+      line-height: 1.75;
+    }
+
+    .guide-list li {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 7px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .dot.good {
+      background: #22c55e;
+    }
+
+    .dot.warn {
+      background: #f59e0b;
+    }
+
+    .footer {
+      min-height: 157px;
+      margin-left: 120px;
+      padding: 22px 0 12px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #5d7cff 0%, #7c3aed 55%, #8133a3 100%);
+    }
+
+    .footer-inner {
+      width: 520px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 28px;
+    }
+
+    .footer h3 {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 8px;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .footer p,
+    .footer li {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 8px;
+      line-height: 1.6;
+    }
+
+    .footer ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .socials {
+      display: flex;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .socials span,
+    .footer-badge {
+      display: inline-grid;
+      place-items: center;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .socials span {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+    }
+
+    .footer-badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+    }
+
+    .footer-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      margin-bottom: 7px;
+    }
+
+    .copyright {
+      width: 520px;
+      margin: 18px auto 0;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 8px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 780px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .brand {
+        height: 44px;
+        padding: 0 12px;
+      }
+
+      .sidebar-nav {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 8px;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar-user {
+        display: none;
+      }
+
+      .topbar {
+        position: static;
+        height: 36px;
+        padding: 0 12px;
+      }
+
+      .page,
+      .footer {
+        margin-left: 0;
+      }
+
+      .page {
+        padding-top: 0;
+      }
+
+      .dashboard-wrap,
+      .footer-inner,
+      .copyright {
+        width: calc(100% - 24px);
+      }
+
+      .cards-grid,
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-wrap {
+        padding-top: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark"><i data-lucide="recycle" size="14"></i></span>
+      <span>Phân Loại Rác</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-link active" href="{{ url_for('dashboard') }}">
+        <i data-lucide="layout-dashboard" size="12"></i>
+        <span>Phân loại</span>
+      </a>
+      <a class="nav-link" href="{{ url_for('history_page') }}">
+        <i data-lucide="history" size="12"></i>
+        <span>Lịch sử</span>
+      </a>
+      <a class="nav-link logout" href="{{ url_for('logout') }}">
+        <i data-lucide="log-out" size="12"></i>
+        <span>Đăng xuất</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <span class="avatar">{{ session.get("full_name", session.get("username", "?"))[0] | upper }}</span>
+      <span>Xin chào,<br><strong>{{ session.get("full_name", session.get("username", "admin")) }}</strong></span>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="topbar-title">Dashboard</div>
+  </header>
+
+  <main class="page">
+    <div class="dashboard-wrap" id="classify-section">
+      <section class="hero">
+        <span class="hero-icon"><i data-lucide="leaf" size="22"></i></span>
+        <div>
+          <h1>Phân Loại Rác Thải Thông Minh</h1>
+          <p>Sử dụng AI để nhận diện và phân loại rác thải một cách chính xác</p>
+        </div>
+      </section>
+
+      <section class="cards-grid">
+        <article class="card">
+          <div class="card-title">
+            <span class="card-icon blue"><i data-lucide="image" size="15"></i></span>
+            <span>Tải lên ảnh</span>
+          </div>
+
+          <label for="imageInput" class="drop-zone">
+            <span>
+              <i data-lucide="cloud-upload" size="27" color="#9ca3af"></i>
+              <strong id="selectedFileName">Nhấn để chọn ảnh</strong>
+              <span>hoặc kéo thả ảnh vào đây</span>
+            </span>
+            <input type="file" id="imageInput" accept="image/*" class="hidden">
+          </label>
+
+          <div class="action-row">
+            <button id="classifyBtn" class="btn btn-primary">
+              <i data-lucide="search" size="11"></i>
+              Phân loại
+            </button>
+            <button id="clearBtn" class="btn btn-gray">
+              <i data-lucide="trash-2" size="11"></i>
+              Xóa
+            </button>
+          </div>
+
+          <img id="resultImage" class="preview-img hidden" alt="Ảnh kết quả phân loại">
+          <div id="resultPill" class="result-pill hidden"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-title">
+            <span class="card-icon green"><i data-lucide="video" size="15"></i></span>
+            <span>Camera Realtime</span>
+          </div>
+
+          <button id="cameraBtn" class="btn btn-green">
+            <i data-lucide="video" size="11"></i>
+            Bật Camera
+          </button>
+
+          <div id="cameraBox" class="hidden">
+            <img id="cameraFeed" class="camera-img" src="" alt="Camera realtime">
+          </div>
+        </article>
+
+        <article class="card guide-card">
+          <div class="guide-head">
+            <span class="card-icon green"><i data-lucide="recycle" size="15"></i></span>
+            <div>
+              <h2>Chai nhựa tái chế</h2>
+              <p>Recyclable Plastic</p>
+            </div>
+          </div>
+          <ul class="guide-list">
+            <li><span class="dot good">✓</span>Chai nước, chai nước ngọt PET</li>
+            <li><span class="dot good">✓</span>Chai nhựa sạch, không còn nhãn</li>
+            <li><span class="dot good">✓</span>Có thể tái chế thành sản phẩm mới</li>
+          </ul>
+        </article>
+
+        <article class="card guide-card">
+          <div class="guide-head">
+            <span class="card-icon gray"><i data-lucide="circle-x" size="15"></i></span>
+            <div>
+              <h2>Chai nhựa không tái chế</h2>
+              <p>Non-Recyclable Plastic</p>
+            </div>
+          </div>
+          <ul class="guide-list">
+            <li><span class="dot warn">!</span>Chai nhựa bẩn, có dầu mỡ</li>
+            <li><span class="dot warn">!</span>Chai nhựa đã hư hỏng, biến dạng</li>
+            <li><span class="dot warn">!</span>Không thể tái chế, cần xử lý đặc biệt</li>
+          </ul>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <h3><span class="footer-badge"><i data-lucide="recycle" size="11"></i></span>Phân Loại Rác Thông Minh</h3>
+        <p>Hệ thống AI giúp phân loại rác thải nhựa một cách thông minh và bảo vệ môi trường.</p>
+        <div class="socials">
+          <span><i class="fa-brands fa-facebook-f" style="font-size:9px;"></i></span>
+          <span><i class="fa-brands fa-x-twitter" style="font-size:9px;"></i></span>
+          <span><i class="fa-brands fa-instagram" style="font-size:9px;"></i></span>
+        </div>
+      </div>
+
+      <div>
+        <h3>Tác động môi trường</h3>
+        <div class="footer-line">
+          <span class="footer-badge"><i data-lucide="leaf" size="10"></i></span>
+          <p><strong>Giảm rác thải</strong><br>Phân loại chính xác để tăng lượng rác được tái chế.</p>
+        </div>
+        <div class="footer-line">
+          <span class="footer-badge"><i data-lucide="heart" size="10"></i></span>
+          <p><strong>Tương lai xanh</strong><br>Cùng chung tay bảo vệ môi trường.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3>Liên hệ</h3>
+        <ul>
+          <li>AI Recycle Lab</li>
+          <li>contact@aiplastic.vn</li>
+          <li>+84 123 456 789</li>
+          <li>24/7 hỗ trợ trực tuyến</li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">© 2026 Waste Classification AI. All rights reserved. Tương lai xanh.</div>
+  </footer>
+
+  <script>
+    const imageInput = document.getElementById("imageInput");
+    const classifyBtn = document.getElementById("classifyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const selectedFileName = document.getElementById("selectedFileName");
+    const resultImage = document.getElementById("resultImage");
+    const resultPill = document.getElementById("resultPill");
+    const cameraBtn = document.getElementById("cameraBtn");
+    const cameraBox = document.getElementById("cameraBox");
+    const cameraFeed = document.getElementById("cameraFeed");
+    let cameraOn = false;
+
+    function refreshIcons() {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function setLoading(isLoading) {
+      classifyBtn.disabled = isLoading;
+      classifyBtn.innerHTML = isLoading
+        ? '<i data-lucide="loader-2" size="11"></i> Đang xử lý'
+        : '<i data-lucide="search" size="11"></i> Phân loại';
+      refreshIcons();
+    }
+
+    imageInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      selectedFileName.textContent = file.name;
+      resultImage.src = URL.createObjectURL(file);
+      resultImage.classList.remove("hidden");
+      resultPill.classList.add("hidden");
+    });
+
+    classifyBtn.addEventListener("click", async () => {
+      if (!imageInput.files[0]) {
+        resultPill.textContent = "Vui lòng chọn ảnh trước";
+        resultPill.classList.remove("hidden");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", imageInput.files[0]);
+
+      try {
+        setLoading(true);
+        const response = await fetch("/classify", { method: "POST", body: formData });
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || "Không thể phân loại ảnh");
+        }
+
+        resultImage.src = data.image;
+        resultImage.classList.remove("hidden");
+        resultPill.textContent = `${data.raw_class || data.class} (${data.confidence})`;
+        resultPill.classList.remove("hidden");
+      } catch (error) {
+        resultPill.textContent = error.message;
+        resultPill.classList.remove("hidden");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      imageInput.value = "";
+      selectedFileName.textContent = "Nhấn để chọn ảnh";
+      resultImage.removeAttribute("src");
+      resultImage.classList.add("hidden");
+      resultPill.classList.add("hidden");
+    });
+
+    cameraBtn.addEventListener("click", () => {
+      if (!cameraOn) {
+        cameraFeed.src = "/video_feed";
+        cameraBox.classList.remove("hidden");
+        cameraBtn.className = "btn btn-red";
+        cameraBtn.innerHTML = '<i data-lucide="video-off" size="11"></i> Tắt Camera';
+        cameraOn = true;
+      } else {
+        cameraFeed.src = "";
+        cameraBox.classList.add("hidden");
+        cameraBtn.className = "btn btn-green";
+        cameraBtn.innerHTML = '<i data-lucide="video" size="11"></i> Bật Camera';
+        cameraOn = false;
+      }
+      refreshIcons();
+    });
+
+    refreshIcons();
+  </script>
+</body>
+
+</html>

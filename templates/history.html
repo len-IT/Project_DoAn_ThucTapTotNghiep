@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch sử Phân loại - Phân Loại Rác</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #dbe5f2;
+      color: #111827;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 120px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      box-shadow: 2px 0 10px rgba(15, 23, 42, 0.08);
+    }
+
+    .brand {
+      height: 41px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5b4deb 100%);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .sidebar-nav {
+      display: grid;
+      gap: 9px;
+      padding: 14px 8px;
+    }
+
+    .nav-link {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      border-radius: 5px;
+      color: #6b7280;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .nav-link.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5146e5 100%);
+      box-shadow: 0 7px 14px rgba(79, 70, 229, 0.25);
+    }
+
+    .nav-link.logout {
+      color: #ef4444;
+    }
+
+    .nav-link:hover {
+      background: #f4f0ff;
+      color: #6d28d9;
+    }
+
+    .nav-link.active:hover {
+      color: #ffffff;
+      background: linear-gradient(135deg, #7c3aed 0%, #5146e5 100%);
+    }
+
+    .sidebar-user {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 8px;
+      border-top: 1px solid #eef0f4;
+      color: #6b7280;
+      background: #fbfcff;
+      font-size: 9px;
+      line-height: 1.15;
+    }
+
+    .avatar {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #ffffff;
+      background: #7c3aed;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* ── Page ── */
+    .page {
+      min-height: 100vh;
+      margin-left: 120px;
+      padding-top: 20px;
+      background:
+        radial-gradient(circle at 8% 4%, rgba(255, 255, 255, 0.55), transparent 30%),
+        linear-gradient(135deg, #eef5ff 0%, #dfe8f5 46%, #cbd8e8 100%);
+    }
+
+    .history-wrap {
+      width: min(100% - 40px, 960px);
+      margin: 0 auto;
+      padding: 18px 0 60px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      border-radius: 7px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 100%);
+      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+      margin-bottom: 14px;
+    }
+
+    .hero-icon {
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .hero p {
+      margin: 4px 0 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    /* ── Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      padding: 12px 14px;
+      border-radius: 7px;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.09);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      flex: 0 0 auto;
+    }
+
+    .stat-icon.purple { background: #f3f0ff; color: #7c3aed; }
+    .stat-icon.green  { background: #f0fdf4; color: #15803d; }
+    .stat-icon.red    { background: #fff1f2; color: #b91c1c; }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    /* ── Table card ── */
+    .table-card {
+      background: #ffffff;
+      border-radius: 7px;
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.1);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 11px 14px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-header-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      background: #7c3aed;
+      color: #ffffff;
+      flex: 0 0 auto;
+    }
+
+    .table-header-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 750px;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f9fafb;
+    }
+
+    th {
+      height: 34px;
+      padding: 0 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      color: #374151;
+      white-space: nowrap;
+    }
+
+    td {
+      height: 72px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f3f4f6;
+      vertical-align: middle;
+      font-size: 10px;
+      color: #374151;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fafbff;
+    }
+
+    .history-img {
+      width: 46px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+      display: block;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-red   { background: #fee2e2; color: #b91c1c; }
+    .badge-gray  { background: #f3f4f6; color: #6b7280; }
+
+    .conf-text {
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .suggestion-text {
+      font-size: 9px;
+      color: #6b7280;
+      max-width: 200px;
+      line-height: 1.5;
+    }
+
+    .time-text {
+      font-size: 9px;
+      color: #111827;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .empty-state {
+      padding: 56px 16px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    .empty-state p {
+      margin: 10px 0 0;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 16px;
+      padding: 9px 18px;
+      border-radius: 7px;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+      transition: opacity 0.18s;
+    }
+
+    .btn-logout:hover { opacity: 0.88; }
+
+    /* ── Responsive ── */
+    @media (max-width: 780px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .brand { height: 44px; padding: 0 12px; }
+
+      .sidebar-nav {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 8px;
+      }
+
+      .nav-link { justify-content: center; }
+      .sidebar-user { display: none; }
+
+      .topbar {
+        position: static;
+        height: 36px;
+        padding: 0 12px;
+      }
+
+      .page { margin-left: 0; padding-top: 0; }
+
+      .stats-grid { grid-template-columns: 1fr; }
+
+      .history-wrap { width: calc(100% - 24px); }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark"><i data-lucide="recycle" size="14"></i></span>
+      <span>Phân Loại Rác</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-link" href="{{ url_for('dashboard') }}">
+        <i data-lucide="layout-dashboard" size="12"></i>
+        <span>Phân loại</span>
+      </a>
+      <a class="nav-link active" href="{{ url_for('history_page') }}">
+        <i data-lucide="history" size="12"></i>
+        <span>Lịch sử</span>
+      </a>
+      <a class="nav-link logout" href="{{ url_for('logout') }}">
+        <i data-lucide="log-out" size="12"></i>
+        <span>Đăng xuất</span>
+      </a>
+    </nav>
+
+  </aside>
+
+
+
+  <main class="page">
+    <div class="history-wrap">
+
+      <section class="hero">
+        <span class="hero-icon"><i data-lucide="history" size="22"></i></span>
+        <div>
+          <h1>Lịch sử Phân loại</h1>
+          <p>Xem lại toàn bộ kết quả phân loại rác thải của bạn</p>
+        </div>
+      </section>
+
+      <!-- Stats cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon purple"><i data-lucide="layers" size="18"></i></div>
+          <div>
+            <div class="stat-value">{{ stats.total }}</div>
+            <div class="stat-label">Tổng lần phân loại</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i data-lucide="recycle" size="18"></i></div>
+          <div>
+            <div class="stat-value">{{ stats.recyclable }}</div>
+            <div class="stat-label">Có thể tái chế</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i data-lucide="trash-2" size="18"></i></div>
+          <div>
+            <div class="stat-value">{{ stats.not_recyclable }}</div>
+            <div class="stat-label">Không thể tái chế</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History table -->
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-header-icon"><i data-lucide="list" size="13"></i></span>
+          <span class="table-header-title">Danh sách phân loại (mới nhất trước)</span>
+        </div>
+        <div class="table-wrap">
+          {% if history_items %}
+          <table>
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Ảnh</th>
+                <th>Kết quả</th>
+                <th>Độ tin cậy</th>
+                <th>Thời gian xử lý</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in history_items %}
+              <tr>
+                <td><span class="time-text">{{ item.created_at }}</span></td>
+                <td>
+                  <img class="history-img"
+                       src="{{ item.image }}"
+                       alt="Ảnh phân loại"
+                       onerror="this.onerror=null; this.removeAttribute('src'); this.alt='Không còn ảnh';">
+                </td>
+                <td>
+                  {% if item.status == 'recyclable' %}
+                    <span class="badge badge-green">
+                      <i data-lucide="check-circle" size="9"></i>
+                      {{ item.raw_class or item.class }}
+                    </span>
+                  {% elif item.status == 'not_recyclable' %}
+                    <span class="badge badge-red">
+                      <i data-lucide="x-circle" size="9"></i>
+                      {{ item.raw_class or item.class }}
+                    </span>
+                  {% else %}
+                    <span class="badge badge-gray">{{ item.raw_class or item.class }}</span>
+                  {% endif %}
+                </td>
+                <td><span class="conf-text">{{ item.confidence }}</span></td>
+                <td><span class="time-text">{{ item.get('inference_time', '—') }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <i data-lucide="inbox" size="40" style="color:#d1d5db;"></i>
+            <p>Chưa có lịch sử phân loại nào.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+
+</html>

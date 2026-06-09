@@ -1,0 +1,60 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dataset
+datasets_all/
+dataset/
+datasets/
+train/
+test/
+valid/
+*.cache
+
+# YOLO training result
+runs/
+
+# Build exe / PyInstaller
+build/
+dist/
+*.spec
+*.exe
+*.toc
+*.pkg
+*.zip
+
+# AI model files
+*.pt
+*.onnx
+*.engine
+
+# Upload/result images
+static/uploads/
+static/results/
+
+# Log
+*.log
+app.log
+
+# User/history local data
+users.json
+classification_history.json
+
+# Node nếu không dùng thì vẫn bỏ qua
+node_modules/
+
+# IDE / system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Env
+.env

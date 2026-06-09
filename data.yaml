@@ -1,0 +1,5 @@
+train: D:/BaiTap/TRI_TUE_NHAN_TAO(yolov8l)/datasets_all/train/images
+val: D:/BaiTap/TRI_TUE_NHAN_TAO(yolov8l)/datasets_all/test/images
+
+nc: 2
+names: ["rac_khong_tai_che_duoc", "rac_tai_che_duoc"]
