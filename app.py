@@ -60,7 +60,7 @@ USERS_FILE = resource_path("users.json")
 HISTORY_FILE = resource_path("classification_history.json")
 
 # Giu nguyen duong dan model YOLOv8/best.pt hien co trong source.
-model_path = resource_path(r"runs\detect\train\weights\best.pt")
+model_path = resource_path(r"models\best.pt")
 model = YOLO(model_path)
 
 
