@@ -1,0 +1,12 @@
+{
+  "lên": {
+    "full_name": "trương lên",
+    "password": "scrypt:32768:8:1$iRQSorL4FTLhVHA2$05f7601135900d5e9d67d84b4fd5571b6f216d8a1a2045e05a8758a0bf2aaea2f7aba85711531d2bdbbc89d3adaf058ca23f4f55d0bfcc3d94404535bc496427",
+    "created_at": "08/06/2026 14:16"
+  },
+  "Cường": {
+    "full_name": "Mạnh Cường",
+    "password": "scrypt:32768:8:1$y4ztnU6Cggp3jgWm$945e9cedebcc74257c8e420b358b808a3d41faa0b332f1708eb5e64d77ca45ee7ea329360b0f24bfaf1ea62a94d06265c7a88a32388b7ceaef467b4be9d50aca",
+    "created_at": "09/06/2026 18:01"
+  }
+}

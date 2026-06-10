@@ -1,60 +1,28 @@
-# Virtual environment
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.pyd
 venv/
-env/
 .venv/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# ===== AI Model goc / model tam =====
+yolov8l.pt
+yolo11n.pt
 
-# Dataset
-datasets_all/
-dataset/
-datasets/
-train/
-test/
-valid/
-*.cache
-
-# YOLO training result
-runs/
-
-# Build exe / PyInstaller
+# ===== Build output =====
 build/
 dist/
-*.spec
-*.exe
-*.toc
-*.pkg
-*.zip
 
-# AI model files
-*.pt
-*.onnx
-*.engine
-
-# Upload/result images
-static/uploads/
-static/results/
-
-# Log
-*.log
+# ===== Runtime =====
 app.log
 
-# User/history local data
-users.json
-classification_history.json
+# ===== Anh upload cua nguoi dung =====
+static/uploads/*
+!static/uploads/.gitkeep
 
-# Node nếu không dùng thì vẫn bỏ qua
-node_modules/
-
-# IDE / system
+# ===== IDE =====
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
 
-# Env
-.env
+# ===== Training output =====
+runs/
